@@ -1,0 +1,141 @@
+-----------------------------------------------------------------------
+ ------ Informatics 2D - 2017/18 - Second Assignment - Planning ------
+-----------------------------------------------------------------------
+ 
+ Write your matriculation number here (your name is not needed)
+ Matriculation Number: s1631442
+ 
+1.1 
+Define predicates of the map as  
+BAR
+UB
+UF
+MB
+MF
+LB
+LF
+adjacent(x,y) - means x is next to y 
+agent(x) - where do I put this ?
+
+
+1.2
+at(x,y) - means x is at y 
+
+
+1.3 
+glass(x)
+containsBeer(x)
+holding(x,y) - x is holding y
+
+1.4
+customer(x)
+served(x)
+
+1.5
+
+a- agent
+g- glass
+c - customer
+
+Inital state:
+
+glass(G)            ∧ 
+customer(C)         ∧ 
+agent(A) 	    ∧ 
+at(A,BAR)           ∧ 
+at(G,BAR)           ∧ 
+at(C,LB)            ∧ 
+adjacent(BAR, UF)   ∧
+adjacent(UF, BAR)   ∧
+adjacent(UF, UB)    ∧
+adjacent(UB, UF)    ∧
+adjacent(UB, MB)    ∧
+adjacent(MB, UB)    ∧
+adjacent(UF, MF)    ∧
+adjacent(MF, UF)    ∧
+adjacent(MB, LB)    ∧
+adjacent(LB, MB)    ∧
+adjacent(MF, LF)    ∧
+adjacent(LF, MF)    ∧
+adjacent(LB, LF)    ∧
+adjacent(LF, LB)
+
+
+
+1.6
+
+Action(PickUp(x,y),
+Precond: agent(x) ∧ glass(y) ∧ ¬holding(x,y),
+Effect: holding(x,y))
+
+
+
+1.7
+
+Action(HandOver(x,y,z,location),
+Precond: agent(x) ∧ glass(y) ∧ customer(z) ∧ containsBeer(y) ∧ holding(x,y) ∧ at(x, location) ∧ at(y,location) ∧ at(z,location),
+Effect: served(z))
+
+
+1.8
+
+Action(Pour(x,y),
+Precond: agent(x) ∧ glass(y) ∧ at(x,BAR) ∧ at(y,BAR) ∧ ¬containsBeer(y) ∧ holding(x,y),
+Effect: containsBeer(y))
+
+
+1.9
+
+Action(Move(x,from,too),
+Precond: agent(x) ∧ at(x,from) ∧ adjacent(from,too),
+Effect: at(x,too))
+
+
+1.10
+
+Backward State Space Search
+
+Goal State: served(C)
+
+Inital State : agent(A) ∧ glass(G) ∧ customer(C) ∧ at(A,BAR) ∧ at(G,BAR) ∧ at(C,UF)
+
+
+
+
+Method backwards
+1.
+Goal State : served(C)
+	Avaliable actions: HandOver(x,y,z,location),Pour(x,y),Move(x,from,too),PickUp(x,y)
+Action done: 
+	Action(HandOver(A,G,C,UF),
+	Precond: agent(A) ∧ glass(G) ∧ customer(C) ∧ containsBeer(G) ∧ holding(A,G) ∧ at(A, UF) ∧ at(G,UF) ∧ at(C,UF),
+	Effect: served(C))
+
+2. Current State : agent(A) ∧ glass(G) ∧ customer(C) ∧ containsBeer(G) ∧ holding(A,G) ∧ at(A, UF) ∧ at(G,UF) ∧ at(C,UF)
+	Avaliable actions: HandOver(x,y,z,location),Pour(x,y),Move(x,from,too),PickUp(x,y)
+Action done: 
+	Action(Move(A,BAR,UF),
+	Precond: agent(A) ∧ at(A,BAR) ∧ adjacent(BAR,UF),
+	Effect: at(A,UF))
+
+3.Current State:agent(A) ∧ glass(G) ∧ customer(C) ∧ containsBeer(G) ∧ holding(A,G) ∧ at(A, BAR) ∧ at(G,BAR) ∧ at(C,UF)
+	Avaliable Actions : HandOver(x,y,z,location),Pour(x,y),Move(x,from,too),PickUp(x,y)
+Action done: 
+	Action(Pour(A,G),
+	Precond: agent(A) ∧ glass(G) ∧ at(A,BAR) ∧ at(G,BAR) ∧ ¬containsBeer(G) ∧ holding(A,G),
+	Effect: containsBeer(G))
+	
+4.Current State: agent(A) ∧ glass(G) ∧ customer(C) ∧ holding(A,G) ∧ at(A, BAR) ∧ at(G,BAR) ∧ at(C,UF)
+	Avaliable Actions : HandOver(x,y,z,location),Pour(x,y),Move(x,from,too),PickUp(x,y)
+
+Action done: 
+	Action(PickUp(A,G),
+	Precond: agent(A) ∧ glass(G) ∧ ¬holding(A,G),
+	Effect: holding(A,G))
+
+5. Inital State: agent(A) ∧ glass(G) ∧ customer(C) ∧ at(A,BAR) ∧ at(G,BAR) ∧ at(C,UF)
+
+
+--------------------
+Answers to parts 2 and 3 should be included in the appropriate
+*-template.pddl files.
